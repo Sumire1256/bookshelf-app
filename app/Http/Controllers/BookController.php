@@ -37,7 +37,7 @@ class BookController extends Controller
     /**
      * 書籍の詳細を表示する
      */
-    public function show($book): View
+    public function show(Book $book): View
     {
         $book = $book->load('genres', 'reviews.user');
 
