@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreBookRequest;
 use App\Models\Book;
+use App\Models\Genre;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -19,23 +22,32 @@ class BookController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * 書籍の登録画面を表示する
      */
-    public function create()
+    public function create(): View
     {
-        //
+        $genres = Genre::all();
+
+        return view('books.create', compact('genres'));
     }
 
     /**
-     * Store a newly created resource in storage.
+     * 書籍を保存する
+     *
+     * @param  StoreBookRequest  $request  バリデーション済みのリクエスト
      */
-    public function store(Request $request)
+    public function store(StoreBookRequest $request): RedirectResponse
     {
-        //
+        $book = auth()->user()->books()->create($request->validated());
+        $book->genres()->attach($request->input('genres'));
+
+        return redirect()->route('books.show', $book)->with('success', '書籍を登録しました');
     }
 
     /**
      * 書籍の詳細を表示する
+     *
+     * @param  Book  $book  表示対象の書籍
      */
     public function show(Book $book): View
     {

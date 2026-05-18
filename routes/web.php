@@ -21,7 +21,11 @@ Route::get('/', [BookController::class, 'index'])->name('books.index');
 Route::get('/books/{book}', [BookController::class, 'show'])->name('books.show');
 
 Route::middleware('auth')->group(function () {
+    Route::get('books/create', [BookController::class, 'create'])->name('books.create');
+    Route::post('books', [BookController::class, 'store'])->name('books.store');
+
     Route::post('/books/{book}/favorites', [FavoriteController::class, 'toggle'])->name('favorites.toggle');
+
     Route::post('reviews/{review}/like', [LikeController::class, 'like'])->name('reviews.like');
 
     Route::post('books/{book}/reviews', [ReviewController::class, 'store'])->name('reviews.store');
