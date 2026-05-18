@@ -53,4 +53,18 @@ class ReviewController extends Controller
 
         return redirect()->route('books.show', $review->book)->with('success', 'レビューを更新しました');
     }
+
+    /**
+     * レビューを削除する
+     *
+     * @param  Review  $review  削除対象のレビュー
+     */
+    public function destroy(Review $review): RedirectResponse
+    {
+        $this->authorize('update', $review);
+
+        $review->delete();
+
+        return redirect()->route('books.show', $review->book)->with('success', 'レビューを削除しました');
+    }
 }
