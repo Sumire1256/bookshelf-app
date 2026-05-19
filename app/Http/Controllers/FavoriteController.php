@@ -15,7 +15,7 @@ class FavoriteController extends Controller
     {
         $user = auth()->user();
 
-        if ($user->favoriteBooks()->contains($book->id)) {
+        if ($user->favoriteBooks->contains($book->id)) {
             $user->favoriteBooks()->detach($book->id);
         } else {
             $user->favoriteBooks()->attach($book->id);
