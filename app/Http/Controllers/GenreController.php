@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreGenreRequest;
+use App\Http\Requests\UpdateGenreRequest;
 use App\Models\Genre;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class GenreController extends Controller
@@ -53,19 +53,26 @@ class GenreController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * ジャンルの編集画面を表示する
+     *
+     * @param  Genre  $genre  編集対象のジャンル
      */
-    public function edit(string $id)
+    public function edit(Genre $genre): View
     {
-        //
+        return view('genres.edit', compact('genre'));
     }
 
     /**
-     * Update the specified resource in storage.
+     * ジャンルを更新する
+     *
+     * @param  UpdateGenreRequest  $request  バリデーション済みのリクエスト
+     * @param  Genre  $genre  更新対象のジャンル
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateGenreRequest $request, Genre $genre): RedirectResponse
     {
-        //
+        $genre->update($request->validated());
+
+        return redirect()->route('genres.show', $genre)->with('success', 'ジャンルを更新しました');
     }
 
     /**
