@@ -29,6 +29,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/books/{book}', [BookController::class, 'destroy'])->name('books.destroy');
 
     Route::post('/books/{book}/favorites', [FavoriteController::class, 'toggle'])->name('favorites.toggle');
+    Route::get('/favorites', [FavoriteController::class, 'index'])->name('favorites.index');
 
     Route::post('/reviews/{review}/like', [LikeController::class, 'like'])->name('reviews.like');
 
