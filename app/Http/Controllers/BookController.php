@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreBookRequest;
+use App\Http\Requests\UpdateBookRequest;
 use App\Models\Book;
 use App\Models\Genre;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class BookController extends Controller
@@ -57,19 +57,33 @@ class BookController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * 書籍の編集画面を表示する
+     *
+     * @param  Book  $book  編集対象の書籍
      */
-    public function edit(string $id)
+    public function edit(Book $book): View
     {
-        //
+        $this->authorize('update', $book);
+
+        $genres = Genre::all();
+
+        return view('books.edit', compact('book', 'genres'));
     }
 
     /**
-     * Update the specified resource in storage.
+     * 書籍を更新する
+     *
+     * @param  UpdateBookRequest  $request  バリデーション済みのリクエスト
+     * @param  Book  $book  更新対象の書籍
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateBookRequest $request, Book $book): RedirectResponse
     {
-        //
+        $this->authorize('update', $book);
+
+        $book->update($request->validated());
+        $book->genres()->sync($request->input('genres'));
+
+        return redirect()->route('books.show', $book)->with('success', '書籍を更新しました');
     }
 
     /**
