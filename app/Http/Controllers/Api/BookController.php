@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\BookCollectionResource;
+use App\Http\Resources\BookResource;
 use App\Models\Book;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -29,11 +30,13 @@ class BookController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * 書籍の詳細を取得する
      */
-    public function show(string $id)
+    public function show(Book $book): BookResource
     {
-        //
+        $book->load(['genres', 'reviews' => fn ($query) => $query->latest(), 'reviews.user'])->loadAvg('reviews', 'rating')->loadCount('reviews');
+
+        return new BookResource($book);
     }
 
     /**
