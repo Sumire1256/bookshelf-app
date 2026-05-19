@@ -35,11 +35,15 @@ class GenreController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * ジャンルの詳細を表示する
+     *
+     * @param  Genre  $genre  表示対象のジャンル
      */
-    public function show(string $id)
+    public function show(Genre $genre): View
     {
-        //
+        $books = $genre->books()->latest()->paginate(10);
+
+        return view('genres.show', compact('genre', 'books'));
     }
 
     /**
