@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreGenreRequest;
 use App\Models\Genre;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -19,19 +21,23 @@ class GenreController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * ジャンルの登録画面を表示する
      */
-    public function create()
+    public function create(): View
     {
-        //
+        return view('genres.create');
     }
 
     /**
-     * Store a newly created resource in storage.
+     * ジャンルを保存する
+     *
+     * @param  StoreGenreRequest  $request  バリデーション済みのリクエスト
      */
-    public function store(Request $request)
+    public function store(StoreGenreRequest $request): RedirectResponse
     {
-        //
+        $genre = Genre::create($request->validated());
+
+        return redirect()->route('genres.show', $genre)->with('success', 'ジャンルを登録しました');
     }
 
     /**
