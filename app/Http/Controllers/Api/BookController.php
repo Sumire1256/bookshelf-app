@@ -65,10 +65,14 @@ class BookController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * 書籍を削除する
+     *
+     * @param  Book  $book  削除対象の書籍
      */
-    public function destroy(string $id)
+    public function destroy(Book $book): JsonResponse
     {
-        //
+        $book->delete();
+
+        return response()->json(null, 204);
     }
 }
