@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreBookRequest;
 use App\Http\Resources\BookCollectionResource;
 use App\Http\Resources\BookResource;
 use App\Models\Book;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
@@ -22,11 +24,20 @@ class BookController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * 書籍を登録する
+     *
+     * @param  StoreBookRequest  $request  バリデーション済みのリクエスト
      */
-    public function store(Request $request)
+    public function store(StoreBookRequest $request): JsonResponse
     {
-        //
+        $book = Book::create(array_merge(
+            $request->validated(),
+            ['user_id' => 1]
+        ));
+        // TODO: Sanctum認証導入後にauth()->id()に変更する
+        $book->genres()->attach($request->input('genres'));
+
+        return (new BookResource($book))->additional(['message' => '書籍を登録しました'])->response()->setStatusCode(201);
     }
 
     /**
