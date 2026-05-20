@@ -4,11 +4,11 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreBookRequest;
+use App\Http\Requests\UpdateBookRequest;
 use App\Http\Resources\BookCollectionResource;
 use App\Http\Resources\BookResource;
 use App\Models\Book;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class BookController extends Controller
@@ -51,11 +51,17 @@ class BookController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * 書籍を更新する
+     *
+     * @param  UpdateBookRequest  $request  バリデーション済みのリクエスト
+     * @param  Book  $book  更新対象の書籍
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateBookRequest $request, Book $book): JsonResponse
     {
-        //
+        $book->update($request->validated());
+        $book->genres()->sync($request->input('genres'));
+
+        return (new BookResource($book))->additional(['message' => '書籍を更新しました'])->response()->setStatusCode(200);
     }
 
     /**
