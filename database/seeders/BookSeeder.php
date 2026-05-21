@@ -10,7 +10,7 @@ class BookSeeder extends Seeder
 {
     public function run(): void
     {
-        $user = User::first();
+        $users = User::all();
 
         $books = [
             [
@@ -114,8 +114,8 @@ class BookSeeder extends Seeder
             ],
         ];
 
-        collect($books)->each(function ($bookData) use ($user) {
-            $book = $user->books()->firstOrCreate(
+        collect($books)->each(function ($bookData) use ($users) {
+            $book = $users->random()->books()->firstOrCreate(
                 [
                     'isbn' => $bookData['isbn'],
                 ],
@@ -129,7 +129,6 @@ class BookSeeder extends Seeder
             );
 
             $genreIds = Genre::whereIn('name', $bookData['genres'])->pluck('id');
-
             $book->genres()->sync($genreIds);
         });
     }
