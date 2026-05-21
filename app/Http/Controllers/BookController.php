@@ -6,6 +6,8 @@ use App\Http\Requests\StoreBookRequest;
 use App\Http\Requests\UpdateBookRequest;
 use App\Models\Book;
 use App\Models\Genre;
+use App\Services\GoogleBooksService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -131,5 +133,36 @@ class BookController extends Controller
         $book->delete();
 
         return redirect()->route('books.index')->with('success', '書籍を削除しました');
+    }
+
+    /**
+     * ISBNから書籍情報を取得する
+     *
+     * @param  string  $isbn  検索するISBN
+     * @param  GoogleBooksService  $googleBooksService  GoogleBooksAPIサービス
+     */
+    public function fetchByIsbn(string $isbn, GoogleBooksService $googleBooksService): JsonResponse
+    {
+        if (strlen($isbn) !== 13 || ! ctype_digit($isbn)) {
+            return response()->json([
+                'error' => 'ISBNは13桁の数字で入力してください',
+            ], 422);
+        }
+
+        try {
+            $bookInfo = $googleBooksService->fetchByIsbn($isbn);
+
+            if (is_null($bookInfo)) {
+                return response()->json([
+                    'error' => '書籍が見つかりませんでした',
+                ], 404);
+            }
+
+            return response()->json($bookInfo, 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => $e->getMessage(),
+            ], $e->getCode());
+        }
     }
 }
