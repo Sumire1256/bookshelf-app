@@ -7,18 +7,51 @@ use App\Http\Requests\UpdateBookRequest;
 use App\Models\Book;
 use App\Models\Genre;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class BookController extends Controller
 {
     /**
      * 書籍の一覧を表示する
+     * キーワード・ジャンル・並び順での絞り込みに対応
+     *
+     * @param  Request  $request  キーワード・ジャンル・並び順を含むリクエスト
      */
-    public function index(): View
+    public function index(Request $request): View
     {
-        $books = Book::with('genres')->withAvg('reviews', 'rating')->latest()->paginate(10);
+        $books = Book::with('genres')
+            ->withAvg('reviews', 'rating')
+            // キーワード検索（タイトル・著者）
+            ->when($request->filled('keyword'), function ($query) use ($request) {
+                $query->where(function ($q) use ($request) {
+                    $q->where('title', 'like', '%'.$request->keyword.'%')->orWhere('author', 'like', '%'.$request->keyword.'%');
+                });
+            })
+            // ジャンル絞り込み
+            ->when($request->filled('genre'), function ($query) use ($request) {
+                $query->whereHas('genres', function ($q) use ($request) {
+                    $q->where('genres.id', $request->genre);
+                });
+            })
+            // ソート
+            ->when($request->filled('sort'), function ($query) use ($request) {
+                match ($request->sort) {
+                    'oldest' => $query->oldest(),
+                    'rating' => $query->orderByRaw('reviews_avg_rating IS NULL ASC') // レビューがない書籍は最後に表示
+                        ->orderByDesc('reviews_avg_rating'),
+                    'title' => $query->orderBy('title'),
+                    default => $query->latest(),
+                };
+            }, function ($query) {
+                $query->latest(); // デフォルトの並び順
+            })
+            ->paginate(10)
+            ->appends($request->query());
 
-        return view('books.index', compact('books'));
+        $genres = Genre::all();
+
+        return view('books.index', compact('books', 'genres'));
     }
 
     /**
