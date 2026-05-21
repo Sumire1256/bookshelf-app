@@ -28,6 +28,8 @@ Route::middleware('auth')->group(function () {
     Route::put('/books/{book}', [BookController::class, 'update'])->name('books.update');
     Route::delete('/books/{book}', [BookController::class, 'destroy'])->name('books.destroy');
 
+    Route::get('/books/isbn/{isbn}', [BookController::class, 'fetchByIsbn'])->name('book.isbn');
+
     Route::post('/books/{book}/favorites', [FavoriteController::class, 'toggle'])->name('favorites.toggle');
     Route::get('/favorites', [FavoriteController::class, 'index'])->name('favorites.index');
 
