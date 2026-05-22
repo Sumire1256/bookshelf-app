@@ -5,6 +5,7 @@ namespace App\Exceptions;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Throwable;
@@ -38,7 +39,7 @@ class Handler extends ExceptionHandler
      * @param  Request  $request  リクエスト
      * @param  Throwable  $exception  発生した例外
      */
-    public function render($request, Throwable $exception): JsonResponse|Response
+    public function render($request, Throwable $exception): JsonResponse|Response|RedirectResponse
     {
         if ($exception instanceof ModelNotFoundException && $request->is('api/*')) {
             return response()->json([

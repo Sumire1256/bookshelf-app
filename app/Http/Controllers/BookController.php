@@ -73,7 +73,7 @@ class BookController extends Controller
      */
     public function store(StoreBookRequest $request): RedirectResponse
     {
-        $book = auth()->user()->books()->create($request->validated());
+        $book = auth()->user()->books()->create($request->safe()->except('genres'));
         $book->genres()->attach($request->input('genres'));
 
         return redirect()->route('books.show', $book)->with('success', '書籍を登録しました');
@@ -115,7 +115,7 @@ class BookController extends Controller
     {
         $this->authorize('update', $book);
 
-        $book->update($request->validated());
+        $book->update($request->safe()->except('genres'));
         $book->genres()->sync($request->input('genres'));
 
         return redirect()->route('books.show', $book)->with('success', '書籍を更新しました');

@@ -30,11 +30,7 @@ class BookController extends Controller
      */
     public function store(StoreBookRequest $request): JsonResponse
     {
-        $book = Book::create(array_merge(
-            $request->validated(),
-            ['user_id' => 1]
-        ));
-        // TODO: Sanctum認証導入後にauth()->id()に変更する
+        $book = auth()->user()->books()->create($request->safe()->except('genres'));
         $book->genres()->attach($request->input('genres'));
 
         return (new BookResource($book))->additional(['message' => '書籍を登録しました'])->response()->setStatusCode(201);
@@ -58,7 +54,9 @@ class BookController extends Controller
      */
     public function update(UpdateBookRequest $request, Book $book): JsonResponse
     {
-        $book->update($request->validated());
+        $this->authorize('update', $book);
+
+        $book->update($request->safe()->except('genres'));
         $book->genres()->sync($request->input('genres'));
 
         return (new BookResource($book))->additional(['message' => '書籍を更新しました'])->response()->setStatusCode(200);
@@ -71,6 +69,8 @@ class BookController extends Controller
      */
     public function destroy(Book $book): JsonResponse
     {
+        $this->authorize('update', $book);
+
         $book->delete();
 
         return response()->json(null, 204);
