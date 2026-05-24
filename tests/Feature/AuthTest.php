@@ -10,7 +10,8 @@ class AuthTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_validation_message_displayed_when_name_is_empty(): void
+    // 会員登録機能
+    public function test_register_validation_message_displayed_when_name_is_empty(): void
     {
         $response = $this->post(route('register'), [
             'email' => 'test@example.com',
@@ -23,7 +24,7 @@ class AuthTest extends TestCase
         $this->assertContains('お名前を入力してください', session()->get('errors')->get('name'));
     }
 
-    public function test_validation_message_displayed_when_email_is_empty(): void
+    public function test_register_validation_message_displayed_when_email_is_empty(): void
     {
         $response = $this->post(route('register'), [
             'email' => '',
@@ -36,7 +37,7 @@ class AuthTest extends TestCase
         $this->assertContains('メールアドレスを入力してください', session()->get('errors')->get('email'));
     }
 
-    public function test_validation_message_displayed_when_password_is_less_than_8_characters(): void
+    public function test_register_validation_message_displayed_when_password_is_less_than_8_characters(): void
     {
         $response = $this->post('/register', [
             'email' => 'test@example',
@@ -49,7 +50,7 @@ class AuthTest extends TestCase
         $this->assertContains('パスワードは8文字以上で入力してください', session()->get('errors')->get('password'));
     }
 
-    public function test_validation_message_displayed_when_password_confirmation_does_not_match(): void
+    public function test_register_validation_message_displayed_when_password_confirmation_does_not_match(): void
     {
         $response = $this->post('/register', [
             'email' => 'test@example',
@@ -62,7 +63,7 @@ class AuthTest extends TestCase
         $this->assertContains('パスワードと一致しません', session()->get('errors')->get('password'));
     }
 
-    public function test_validation_message_displayed_when_password_is_empty(): void
+    public function test_register_validation_message_displayed_when_password_is_empty(): void
     {
         $response = $this->post('/register', [
             'email' => 'test@example',
@@ -75,7 +76,7 @@ class AuthTest extends TestCase
         $this->assertContains('パスワードを入力してください', session()->get('errors')->get('password'));
     }
 
-    public function test_data_saved_successfully_when_form_is_filled_correctly(): void
+    public function test_register_data_saved_successfully_when_form_is_filled_correctly(): void
     {
         $response = $this->post('/register', [
             'email' => 'test@example',
@@ -90,7 +91,9 @@ class AuthTest extends TestCase
         ]);
     }
 
-    public function validation_message_displayed_when_email_is_empty(): void
+    // ログイン機能
+
+    public function test_login_validation_message_displayed_when_email_is_empty(): void
     {
         $user = User::factory()->create([
             'email' => 'test@example.com',
@@ -106,7 +109,7 @@ class AuthTest extends TestCase
         $this->assertContains('メールアドレスを入力してください', session()->get('errors')->get('email'));
     }
 
-    public function validation_message_displayed_when_password_is_empty(): void
+    public function test_login_validation_message_displayed_when_password_is_empty(): void
     {
         $user = User::factory()->create([
             'email' => 'test@example.com',
@@ -122,7 +125,7 @@ class AuthTest extends TestCase
         $this->assertContains('パスワードを入力してください', session()->get('errors')->get('password'));
     }
 
-    public function validation_message_displayed_when_registration_data_mismatch(): void
+    public function test_login_validation_message_displayed_when_registration_data_mismatch(): void
     {
         $user = User::factory()->create([
             'email' => 'test@example.com',
@@ -139,6 +142,7 @@ class AuthTest extends TestCase
         $this->assertContains('ログイン情報が登録されていません', $errors);
     }
 
+    // ログアウト機能
     public function test_redirected_to_login_when_user_logout(): void
     {
         $user = User::factory()->create();
