@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -24,15 +22,9 @@ class Book extends Model
         'image_url',
     ];
 
-    /**
-     * 出版日を整形して取得する
-     */
-    protected function publishedDate(): Attribute
-    {
-        return Attribute::make(
-            get: fn ($value) => $value ? Carbon::parse($value)->format('Y-m-d') : null,
-        );
-    }
+    protected $casts = [
+        'published_date' => 'date',
+    ];
 
     /**
      * 書籍に関連するレビューを取得する。
