@@ -39,6 +39,7 @@ class BookController extends Controller
             // ソート
             ->when($request->filled('sort'), function ($query) use ($request) {
                 match ($request->sort) {
+                    'newest' => $query->latest(),
                     'oldest' => $query->oldest(),
                     'rating' => $query->orderByRaw('reviews_avg_rating IS NULL ASC') // レビューがない書籍は最後に表示
                         ->orderByDesc('reviews_avg_rating'),
