@@ -242,4 +242,24 @@ class GenreTest extends TestCase
         $response->assertRedirect(route('genres.index'));
         $response->assertSessionHas('error', 'このジャンルは書籍が登録されているため削除できません');
     }
+
+    // ジャンル詳細のページネーション
+    public function test_get_books_by_genre_with_pagination(): void
+    {
+        $genre = Genre::factory()->create();
+        $books = Book::factory()->count(15)->create()->each(function ($book) use ($genre) {
+            $book->genres()->attach($genre->id);
+        });
+
+        $firstPage = $this->actingAs($this->user)->get(route('genres.show', $genre));
+
+        $firstPage->assertOk();
+        $this->assertCount(10, $firstPage->viewData('books'));
+        $firstPage->assertSee('?page=2');
+
+        $secondPage = $this->actingAs($this->user)->get(route('genres.show', $genre).'?page=2');
+
+        $secondPage->assertOk();
+        $this->assertCount(5, $secondPage->viewData('books'));
+    }
 }
