@@ -89,4 +89,23 @@ class FavoriteTest extends TestCase
         $response->assertOk();
         $response->assertDontSee($otherBook->title);
     }
+
+    public function test_favorite_books_are_paginated(): void
+    {
+        $books = Book::factory()->count(15)->create();
+        $books->each(function ($book) {
+            $this->user->favoriteBooks()->attach($book->id);
+        });
+
+        $firstPage = $this->actingAs($this->user)->get(route('favorites.index'));
+
+        $firstPage->assertOk();
+        $this->assertCount(10, $firstPage->viewData('books'));
+        $firstPage->assertSee('?page=2');
+
+        $secondPage = $this->actingAs($this->user)->get(route('favorites.index').'?page=2');
+
+        $secondPage->assertOk();
+        $this->assertCount(5, $secondPage->viewData('books'));
+    }
 }
