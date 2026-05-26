@@ -39,6 +39,7 @@ class StoreBookTest extends TestCase
             'author' => 'テスト著者',
         ]);
         $response->assertRedirect(route('books.show', Book::first()));
+        $response->assertSessionHas('success', '書籍を登録しました');
     }
 
     public function test_guest_can_not_store_book(): void
