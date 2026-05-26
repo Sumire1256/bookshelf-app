@@ -35,6 +35,7 @@ class DestroyBookTest extends TestCase
         $response = $this->actingAs($this->user)->delete(route('books.destroy', $this->book));
 
         $response->assertRedirect(route('books.index'));
+        $response->assertSessionHas('success', '書籍を削除しました');
         $this->assertDatabaseMissing('books', [
             'user_id' => $this->user->id,
         ]);

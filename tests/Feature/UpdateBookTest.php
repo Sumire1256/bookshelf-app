@@ -43,6 +43,7 @@ class UpdateBookTest extends TestCase
             'author' => '更新後著者',
         ]);
         $response->assertRedirect(route('books.show', $this->book));
+        $response->assertSessionHas('success', '書籍を更新しました');
     }
 
     public function test_guest_can_not_update_book(): void
