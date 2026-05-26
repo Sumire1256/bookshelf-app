@@ -195,6 +195,11 @@ class BookIndexTest extends TestCase
             'author' => '山田太郎',
         ])->each(fn ($book) => $book->genres()->attach($this->genre->id));
 
+        // 検索に引っかからない書籍
+        $otherGenre = Genre::factory()->create();
+        $excludedBook = Book::factory()->create(['author' => '佐藤花子']);
+        $excludedBook->genres()->attach($otherGenre->id);
+
         // 検索条件を指定
         $params = [
             'keyword' => '山田',
@@ -205,6 +210,7 @@ class BookIndexTest extends TestCase
         $firstPage = $this->get(route('books.index', $params));
         $firstPage->assertOk();
         $firstPage->assertViewHas('books', fn ($books) => $books->count() === 10);
+        $firstPage->assertDontSee($excludedBook->title);
 
         // 2ページ目に検索条件を維持したまま遷移
         $secondPage = $this->get(route('books.index', array_merge($params, ['page' => 2])));
@@ -212,5 +218,6 @@ class BookIndexTest extends TestCase
 
         // 2ページ目でも検索条件が維持されている
         $secondPage->assertViewHas('books', fn ($books) => $books->count() === 1);
+        $secondPage->assertDontSee($excludedBook->title);
     }
 }
