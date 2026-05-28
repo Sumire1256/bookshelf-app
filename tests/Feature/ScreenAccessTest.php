@@ -192,4 +192,20 @@ class ScreenAccessTest extends TestCase
 
         $response->assertForbidden();
     }
+
+    public function test_authenticated_user_can_access_my_book_reports(): void
+    {
+        $response = $this->actingAs($this->user)->get(route('reports.index'));
+
+        $response->assertOk();
+        $response->assertViewIs('reports.index');
+    }
+
+    public function test_guest_is_redirected_to_login_when_accessing_my_book_reports(): void
+    {
+        $response = $this->get(route('reports.index'));
+
+        $response->assertStatus(302);
+        $response->assertRedirect(route('login'));
+    }
 }
