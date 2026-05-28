@@ -8,17 +8,22 @@ use App\Http\Requests\UpdateBookRequest;
 use App\Http\Resources\BookCollectionResource;
 use App\Http\Resources\BookResource;
 use App\Models\Book;
+use App\Services\BookSearchService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class BookController extends Controller
 {
     /**
      * 書籍の一覧を取得する
+     *
+     * @param  Request  $request  キーワード・ジャンル・並び順を含むリクエスト
+     * @param  BookSearchService  $bookSearchService  書籍検索サービス
      */
-    public function index(): AnonymousResourceCollection
+    public function index(Request $request, BookSearchService $bookSearchService): AnonymousResourceCollection
     {
-        $books = Book::with('genres')->withAvg('reviews', 'rating')->withCount('reviews')->latest()->paginate(10);
+        $books = $bookSearchService->getFilteredBooks($request);
 
         return BookCollectionResource::collection($books);
     }
