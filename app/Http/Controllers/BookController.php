@@ -6,6 +6,7 @@ use App\Http\Requests\StoreBookRequest;
 use App\Http\Requests\UpdateBookRequest;
 use App\Models\Book;
 use App\Models\Genre;
+use App\Services\BookSearchService;
 use App\Services\GoogleBooksService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -19,38 +20,11 @@ class BookController extends Controller
      * キーワード・ジャンル・並び順での絞り込みに対応
      *
      * @param  Request  $request  キーワード・ジャンル・並び順を含むリクエスト
+     * @param  BookSearchService  $bookSearchService  書籍検索サービス
      */
-    public function index(Request $request): View
+    public function index(Request $request, BookSearchService $bookSearchService): View
     {
-        $books = Book::with('genres')
-            ->withAvg('reviews', 'rating')
-            // キーワード検索（タイトル・著者）
-            ->when($request->filled('keyword'), function ($query) use ($request) {
-                $query->where(function ($q) use ($request) {
-                    $q->where('title', 'like', '%'.$request->keyword.'%')->orWhere('author', 'like', '%'.$request->keyword.'%');
-                });
-            })
-            // ジャンル絞り込み
-            ->when($request->filled('genre'), function ($query) use ($request) {
-                $query->whereHas('genres', function ($q) use ($request) {
-                    $q->where('genres.id', $request->genre);
-                });
-            })
-            // ソート
-            ->when($request->filled('sort'), function ($query) use ($request) {
-                match ($request->sort) {
-                    'newest' => $query->latest(),
-                    'oldest' => $query->oldest(),
-                    'rating' => $query->orderByRaw('reviews_avg_rating IS NULL ASC') // レビューがない書籍は最後に表示
-                        ->orderByDesc('reviews_avg_rating'),
-                    'title' => $query->orderBy('title'),
-                    default => $query->latest(),
-                };
-            }, function ($query) {
-                $query->latest(); // デフォルトの並び順
-            })
-            ->paginate(10)
-            ->appends($request->query());
+        $books = $bookSearchService->getFilteredBooks($request)->appends($request->query());
 
         $genres = Genre::all();
 
