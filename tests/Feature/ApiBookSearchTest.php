@@ -181,6 +181,18 @@ class ApiBookSearchTest extends TestCase
         $response->assertJsonPath('data.1.id', $lowRatedBook->id);
     }
 
+    public function test_books_are_sorted_by_default_when_invalid_sort_given(): void
+    {
+        $oldBook = Book::factory()->create(['created_at' => now()->subDay()]);
+        $newBook = Book::factory()->create(['created_at' => now()]);
+
+        $response = $this->getJson('/api/v1/books?sort=invalid');
+
+        $response->assertOk();
+        $response->assertJsonPath('data.0.id', $newBook->id);
+        $response->assertJsonPath('data.1.id', $oldBook->id);
+    }
+
     public function test_search_conditions_are_maintained_on_pagination(): void
     {
         Book::factory()->count(11)->create(['author' => '山田太郎'])
