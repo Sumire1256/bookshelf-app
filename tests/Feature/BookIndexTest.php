@@ -12,26 +12,19 @@ class BookIndexTest extends TestCase
 {
     use RefreshDatabase;
 
-    private $book;
-
     private $genre;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->book = Book::factory()->create([
-            'title' => 'Laravel',
-            'author' => '山田太郎',
-        ]);
         $this->genre = Genre::factory()->create([
             'name' => '技術書',
         ]);
-        $this->book->genres()->attach($this->genre->id);
     }
 
     public function test_books_index_displays_books_with_pagination_in_latest_order(): void
     {
-        Book::factory()->count(10)->create();
+        Book::factory()->count(11)->create();
 
         $firstPage = $this->get(route('books.index'));
 
@@ -58,6 +51,10 @@ class BookIndexTest extends TestCase
 
     public function test_books_are_filtered_by_keyword_title(): void
     {
+        $book = Book::factory()->create([
+            'title' => 'Laravel',
+            'author' => '山田太郎',
+        ]);
         $otherBook = Book::factory()->create([
             'title' => 'Ruby',
         ]);
@@ -70,8 +67,12 @@ class BookIndexTest extends TestCase
 
     public function test_books_are_filtered_by_keyword_author(): void
     {
+        $book = Book::factory()->create([
+            'title' => 'Laravel',
+            'author' => '山田太郎',
+        ]);
         $otherBook = Book::factory()->create([
-            'title' => 'C#',
+            'title' => 'Laravel',
             'author' => '佐藤健太',
         ]);
 
@@ -83,20 +84,29 @@ class BookIndexTest extends TestCase
 
     public function test_books_are_filtered_by_genre(): void
     {
-        $otherBook = Book::factory()->create();
-        $otherGenre = Genre::factory()->create([
-            'name' => 'ビジネス',
+        $book = Book::factory()->create([
+            'title' => 'Laravel',
         ]);
+        $book->genres()->attach($this->genre->id);
+
+        $otherBook = Book::factory()->create(['title' => 'Ruby']);
+        $otherGenre = Genre::factory()->create();
         $otherBook->genres()->attach($otherGenre->id);
 
         $response = $this->get(route('books.index', ['genre' => $this->genre->id]));
 
-        $response->assertSee($this->book->title);
+        $response->assertSee($book->title);
         $response->assertDontSee($otherBook->title);
     }
 
     public function test_books_are_filtered_by_keyword_and_genre(): void
     {
+        $book = Book::factory()->create([
+            'title' => 'Laravel',
+            'author' => '山田太郎',
+        ]);
+        $book->genres()->attach($this->genre->id);
+
         $book2 = Book::factory()->create([
             'title' => 'C#',
             'author' => '佐藤健太',
@@ -114,7 +124,7 @@ class BookIndexTest extends TestCase
 
         $response = $this->get(route('books.index', ['keyword' => '山田', 'genre' => $this->genre->id]));
 
-        $response->assertSee($this->book->title);
+        $response->assertSee($book->title);
         $response->assertDontSee($book2->title);
         $response->assertDontSee($book3->title);
     }
@@ -191,7 +201,7 @@ class BookIndexTest extends TestCase
 
     public function test_search_conditions_are_maintained_on_pagination(): void
     {
-        Book::factory()->count(10)->create([
+        Book::factory()->count(11)->create([
             'author' => '山田太郎',
         ])->each(fn ($book) => $book->genres()->attach($this->genre->id));
 

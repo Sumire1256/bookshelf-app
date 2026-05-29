@@ -21,7 +21,7 @@ class BookResource extends JsonResource
             'author' => $this->author,
             'genres' => $this->genres->pluck('name'),
             'isbn' => $this->isbn,
-            'published_date' => $this->published_date,
+            'published_date' => $this->published_date?->format('Y-m-d'),
             'description' => $this->description,
             'image_url' => $this->image_url,
             'reviews_avg_rating' => $this->reviews_avg_rating ? number_format((float) $this->reviews_avg_rating, 2) : null,
