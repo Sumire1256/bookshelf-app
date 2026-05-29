@@ -138,7 +138,6 @@ class BookIndexTest extends TestCase
 
         $response->assertOk();
         $content = $response->getContent();
-
         $this->assertGreaterThan(
             strpos($content, $newBook->title),
             strpos($content, $oldBook->title)
@@ -196,6 +195,21 @@ class BookIndexTest extends TestCase
         $this->assertGreaterThan(
             strpos($content, $highRatedBook->title),
             strpos($content, $lowRatedBook->title)
+        );
+    }
+
+    public function test_books_are_sorted_by_default_when_invalid_sort_given(): void
+    {
+        $oldBook = Book::factory()->create(['created_at' => now()->subDay()]);
+        $newBook = Book::factory()->create(['created_at' => now()]);
+
+        $response = $this->get(route('books.index', ['sort' => 'invalid']));
+
+        $response->assertOk();
+        $content = $response->getContent();
+        $this->assertGreaterThan(
+            strpos($content, $newBook->title),
+            strpos($content, $oldBook->title)
         );
     }
 

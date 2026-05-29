@@ -92,6 +92,17 @@ class AuthTest extends TestCase
     }
 
     // ログイン機能
+    public function test_authenticated_user_is_redirected_from_login(): void
+    {
+        $user = User::factory()->create([
+            'email' => 'test@example.com',
+            'password' => bcrypt('password123'),
+        ]);
+
+        $response = $this->actingAs($user)->get('/login');
+
+        $response->assertRedirect('/');
+    }
 
     public function test_login_validation_message_displayed_when_email_is_empty(): void
     {
@@ -140,6 +151,29 @@ class AuthTest extends TestCase
         $response->assertSessionHasErrors(['email']);
         $errors = session('errors')->get('email');
         $this->assertContains('ログイン情報が登録されていません', $errors);
+    }
+
+    // ログイン試行のテスト
+    public function test_login_is_rate_limited_after_5_attempts(): void
+    {
+        $user = User::factory()->create([
+            'email' => 'test@example.com',
+            'password' => bcrypt('password123'),
+        ]);
+
+        collect(range(1, 6))->each(function () {
+            $this->post(route('login'), [
+                'email' => 'test@example.com',
+                'password' => 'wrong_password',
+            ]);
+        });
+
+        $response = $this->post(route('login'), [
+            'email' => 'test@example.com',
+            'password' => 'wrong_password',
+        ]);
+
+        $response->assertStatus(429);
     }
 
     // ログアウト機能
