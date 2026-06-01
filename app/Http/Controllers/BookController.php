@@ -21,6 +21,7 @@ class BookController extends Controller
      *
      * @param  Request  $request  キーワード・ジャンル・並び順を含むリクエスト
      * @param  BookSearchService  $bookSearchService  書籍検索サービス
+     * @return View 書籍一覧のビュー
      */
     public function index(Request $request, BookSearchService $bookSearchService): View
     {
@@ -33,6 +34,8 @@ class BookController extends Controller
 
     /**
      * 書籍の登録画面を表示する
+     *
+     * @return View 書籍登録のビュー
      */
     public function create(): View
     {
@@ -45,6 +48,7 @@ class BookController extends Controller
      * 書籍を保存する
      *
      * @param  StoreBookRequest  $request  バリデーション済みのリクエスト
+     * @return RedirectResponse 書籍の詳細ページにリダイレクトするレスポンス
      */
     public function store(StoreBookRequest $request): RedirectResponse
     {
@@ -58,6 +62,7 @@ class BookController extends Controller
      * 書籍の詳細を表示する
      *
      * @param  Book  $book  表示対象の書籍
+     * @return View 書籍詳細のビュー
      */
     public function show(Book $book): View
     {
@@ -70,6 +75,7 @@ class BookController extends Controller
      * 書籍の編集画面を表示する
      *
      * @param  Book  $book  編集対象の書籍
+     * @return View 書籍編集のビュー
      */
     public function edit(Book $book): View
     {
@@ -85,6 +91,7 @@ class BookController extends Controller
      *
      * @param  UpdateBookRequest  $request  バリデーション済みのリクエスト
      * @param  Book  $book  更新対象の書籍
+     * @return RedirectResponse 書籍の詳細ページにリダイレクトするレスポンス
      */
     public function update(UpdateBookRequest $request, Book $book): RedirectResponse
     {
@@ -100,6 +107,7 @@ class BookController extends Controller
      * 書籍を削除する
      *
      * @param  Book  $book  削除対象の書籍
+     * @return RedirectResponse 書籍一覧ページにリダイレクトするレスポンス
      */
     public function destroy(Book $book): RedirectResponse
     {
@@ -115,6 +123,7 @@ class BookController extends Controller
      *
      * @param  string  $isbn  検索するISBN
      * @param  GoogleBooksService  $googleBooksService  GoogleBooksAPIサービス
+     * @return JsonResponse 書籍情報を含むJSONレスポンス
      */
     public function fetchByIsbn(string $isbn, GoogleBooksService $googleBooksService): JsonResponse
     {

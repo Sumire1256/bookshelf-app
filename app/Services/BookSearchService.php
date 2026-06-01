@@ -12,6 +12,7 @@ class BookSearchService
      * 書籍一覧を検索・フィルタ・ソートして取得する
      *
      * @param  Request  $request  リクエスト
+     * @return LengthAwarePaginator フィルタ・ソートされた書籍のページネーション結果
      */
     public function getFilteredBooks(Request $request): LengthAwarePaginator
     {

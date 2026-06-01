@@ -40,6 +40,7 @@ class Handler extends ExceptionHandler
      *
      * @param  Request  $request  リクエスト
      * @param  Throwable  $exception  発生した例外
+     * @return JsonResponse|Response|RedirectResponse 例外に応じたHTTPレスポンス
      */
     public function render($request, Throwable $exception): JsonResponse|Response|RedirectResponse
     {

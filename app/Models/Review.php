@@ -20,6 +20,8 @@ class Review extends Model
 
     /**
      * レビューが関連する書籍を取得する。
+     *
+     * @return BelongsTo レビューが関連する書籍のリレーション
      */
     public function book(): BelongsTo
     {
@@ -28,6 +30,8 @@ class Review extends Model
 
     /**
      * レビューを投稿したユーザーを取得する。
+     *
+     * @return BelongsTo レビューを投稿したユーザーのリレーション
      */
     public function user(): BelongsTo
     {
@@ -36,6 +40,8 @@ class Review extends Model
 
     /**
      * レビューのいいねを取得する。
+     *
+     * @return BelongsToMany レビューのいいねをしたユーザーのリレーション
      */
     public function likedByUsers(): BelongsToMany
     {

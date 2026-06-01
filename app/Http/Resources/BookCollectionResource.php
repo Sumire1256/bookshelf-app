@@ -11,6 +11,7 @@ class BookCollectionResource extends JsonResource
      * 書籍一覧での書籍のリソース表現
      *
      * @param  Request  $request  リクエスト
+     * @return array 書籍のリソース配列
      */
     public function toArray(Request $request): array
     {

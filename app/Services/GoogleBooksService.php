@@ -11,6 +11,9 @@ class GoogleBooksService
      * ISBNから書籍情報を取得する
      *
      * @param  string  $isbn  検索するISBN
+     * @return array|null 書籍情報の配列。見つからない場合はnull
+     *
+     * @throws \Exception APIの利用制限に達した場合や書籍情報の取得に失敗した場合に例外を投げる
      */
     public function fetchByIsbn(string $isbn): ?array
     {
@@ -35,6 +38,7 @@ class GoogleBooksService
      * 書籍情報を整形する
      *
      * @param  Collection  $volumeInfo  GoogleBooksAPIのvolumeInfo
+     * @return array 書籍情報の配列
      */
     private function formatBookInfo(Collection $volumeInfo): array
     {

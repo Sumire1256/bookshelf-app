@@ -14,6 +14,7 @@ class AuthController extends Controller
      * APIトークンを発行する
      *
      * @param  Request  $request  メールアドレスとパスワード
+     * @return JsonResponse トークンを含むJSONレスポンス
      */
     public function login(Request $request): JsonResponse
     {
@@ -34,6 +35,7 @@ class AuthController extends Controller
      * APIトークンを削除する
      *
      * @param  Request  $request  リクエスト
+     * @return JsonResponse ログアウト結果を含むJSONレスポンス
      */
     public function logout(Request $request): JsonResponse
     {
