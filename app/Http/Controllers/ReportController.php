@@ -33,7 +33,7 @@ class ReportController extends Controller
     {
         return [
             'total_reviews' => $reviews->count(),
-            'books_read' => $reviews->count(),
+            'books_read' => $reviews->pluck('book_id')->unique()->count(),
             'average_rating' => $reviews->avg('rating') ?? 0,
         ];
     }
@@ -59,6 +59,7 @@ class ReportController extends Controller
     {
         return $reviews->where('rating', '>=', 4)
             ->sortByDesc('rating')
+            ->unique('book_id')  // 同じ書籍の重複を除外
             ->take(5)
             ->map(fn ($review) => [
                 'id' => $review->book->id,

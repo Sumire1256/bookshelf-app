@@ -51,22 +51,20 @@ class ReviewTest extends TestCase
         $response->assertRedirect(route('login'));
     }
 
-    // レビューと書籍の一意制約
-    public function test_user_can_not_store_duplicate_review(): void
+    public function test_user_can_store_multiple_reviews_for_same_book(): void
     {
-        Review::factory()->create([
-            'user_id' => $this->user->id,
-            'book_id' => $this->book->id,
+        $this->actingAs($this->user)->post(route('reviews.store', $this->book), [
+            'rating' => 5,
+            'comment' => '1回目のレビュー',
         ]);
 
         $response = $this->actingAs($this->user)->post(route('reviews.store', $this->book), [
             'rating' => 5,
-            'comment' => 'テストコメント',
+            'comment' => '2回目のレビュー',
         ]);
 
-        $response->assertSessionHasErrors([
-            'rating' => 'この書籍にはすでにレビューを投稿しています',
-        ]);
+        $response->assertRedirect(route('books.show', $this->book));
+        $this->assertDatabaseCount('reviews', 2);
     }
 
     // レビューのバリデーション
@@ -209,8 +207,7 @@ class ReviewTest extends TestCase
         $response->assertRedirect(route('books.show', $this->book));
         $response->assertSessionHas('success', 'レビューを削除しました');
         $this->assertDatabaseMissing('reviews', [
-            'user_id' => $this->user->id,
-            'book_id' => $this->book->id,
+            'id' => $review->id,
         ]);
     }
 

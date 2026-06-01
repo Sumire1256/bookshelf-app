@@ -6,7 +6,6 @@ use App\Http\Requests\ReviewRequest;
 use App\Models\Book;
 use App\Models\Review;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
 class ReviewController extends Controller
@@ -19,12 +18,6 @@ class ReviewController extends Controller
      */
     public function store(ReviewRequest $request, Book $book): RedirectResponse
     {
-        if ($book->reviews()->where('user_id', Auth::id())->exists()) {
-            return back()->withErrors([
-                'rating' => 'この書籍にはすでにレビューを投稿しています',
-            ]);
-        }
-
         Review::create([
             'user_id' => auth()->id(),
             'book_id' => $book->id,

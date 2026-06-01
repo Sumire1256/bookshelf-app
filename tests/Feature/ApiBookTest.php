@@ -56,6 +56,28 @@ class ApiBookTest extends TestCase
         ]);
     }
 
+    public function test_book_detail_shows_multiple_reviews(): void
+    {
+        Review::factory()->create([
+            'book_id' => $this->book,
+            'rating' => 5,
+        ]);
+        Review::factory()->create([
+            'book_id' => $this->book,
+            'rating' => 3,
+        ]);
+
+        $response = $this->getJson("/api/v1/books/{$this->book->id}");
+
+        $response->assertOk();
+        $response->assertJsonFragment([
+            'reviews_count' => 2,
+            'reviews_avg_rating' => '4.00',
+        ]);
+        $response->assertJsonCount(2, 'data.reviews');
+
+    }
+
     public function test_guest_can_get_book_with_correct_structure(): void
     {
         $book = Book::factory()->create([
