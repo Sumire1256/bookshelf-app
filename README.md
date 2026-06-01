@@ -7,6 +7,7 @@ Bookshelfは書籍のレビューと管理ができるWebアプリケーショ�
 また、気に入った書籍をお気に入りに登録したり、他のユーザーのレビューにいいねをすることができます。  
 その他にも、ランキングや、マイ読書レポートなどの機能を提供します。
 
+
 ## 🪄使用技術一覧
 ### バックエンド
 ![Laravel](https://img.shields.io/badge/Laravel-10.x-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)
@@ -26,15 +27,18 @@ Bookshelfは書籍のレビューと管理ができるWebアプリケーショ�
 ![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
 ![phpMyAdmin](https://img.shields.io/badge/phpMyAdmin-6C78AF?style=for-the-badge&logo=phpmyadmin&logoColor=white)
 
+
 ## 🔍目次
 1. [主な機能](#主な機能)
 2. [ER図](#er図)
 3. [環境構築手順](#️環境構築手順)
-4. [APIエンドポイント一覧](#apiエンドポイント一覧)
-5. [開発環境URL](#開発環境url)
-6. [ログイン情報](#ログイン情報)
-7. [テストの実行方法](#テストの実行方法)
-8. [作成者](#作成者)
+4. [外部API設定](#外部api設定)
+5. [APIエンドポイント一覧](#apiエンドポイント一覧)
+6. [開発環境URL](#開発環境url)
+7. [ログイン情報](#ログイン情報)
+8. [テストの実行方法](#テストの実行方法)
+9. [作成者](#作成者)
+
 
 ## 📌主な機能
 - 書籍の登録・編集・削除
@@ -47,6 +51,7 @@ Bookshelfは書籍のレビューと管理ができるWebアプリケーショ�
 - 書籍検索・フィルタ・ソート
 - ISBN検索（Google Books API連携）
 - 公開API
+
 
 ## 🧩ER図
 ```mermaid
@@ -126,6 +131,7 @@ erDiagram
 	reviews||--o{review_likes:"has many (中間)"
 ```
 
+
 ## ⛏️環境構築手順
 
 1. リポジトリのクローン
@@ -173,7 +179,26 @@ sail npm run dev
 sail npm run build
 ```
 
+
+## 🔑 外部API設定
+
+### Google Books API キーの取得
+
+ISBN検索機能を使用するには Google Books API キーが必要です。
+
+1. [Google Cloud Console](https://console.cloud.google.com) にアクセス
+2. プロジェクトを作成
+3. 「Books API」を有効化
+4. 「認証情報」→「APIキーを作成」
+5. `.env` に以下を設定
+
+```env
+GOOGLE_BOOKS_API_KEY=取得したAPIキー
+```
+
+
 ## 📱APIエンドポイント一覧
+
 ### 認証
 | メソッド | URI | 説明 | 認証 |
 |---------|-----|------|------|
@@ -189,9 +214,11 @@ HTTPメソッド | URI | 説明 | 認証
 ![PUT](https://img.shields.io/badge/PUT-3b82f6?style=flat-square) | /api/v1/books/{book} | 書籍を更新する | Sanctum + BookPolicy(所有者のみ)
 ![DELETE](https://img.shields.io/badge/DELETE-ef4444?style=flat-square) | /api/v1/books/{book}| 書籍を削除する | Sanctum + BookPolicy(所有者のみ)
 
+
 ## 🌐開発環境URL
 - アプリ: http://localhost
 - phpMyAdmin: http://localhost:8080
+
 
 ## 🔓ログイン情報
 | 名前 | メールアドレス | パスワード |
@@ -201,6 +228,7 @@ HTTPメソッド | URI | 説明 | 認証
 | 田中一郎 | tanaka@example.com | password |
 | 佐藤美咲 | sato@example.com | password |
 | 高橋健太 | takahashi@example.com | password |
+
 
 ## 💯テストの実行方法
 - 全テスト実行
