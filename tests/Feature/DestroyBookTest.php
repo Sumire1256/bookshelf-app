@@ -55,5 +55,6 @@ class DestroyBookTest extends TestCase
         $response = $this->actingAs($otherUser)->delete(route('books.destroy', $this->book));
 
         $response->assertForbidden();
+        $response->assertSee('アクセス権限がありません');
     }
 }

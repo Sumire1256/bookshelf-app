@@ -181,6 +181,7 @@ class ScreenAccessTest extends TestCase
         $response = $this->actingAs($otherUser)->get(route('reviews.edit', $review));
 
         $response->assertForbidden();
+        $response->assertSee('アクセス権限がありません');
     }
 
     public function test_non_owner_can_not_access_book_edit(): void
@@ -191,6 +192,7 @@ class ScreenAccessTest extends TestCase
         $response = $this->actingAs($otherUser)->get(route('books.edit', $book));
 
         $response->assertForbidden();
+        $response->assertSee('アクセス権限がありません');
     }
 
     public function test_authenticated_user_can_access_my_book_reports(): void
@@ -207,5 +209,13 @@ class ScreenAccessTest extends TestCase
 
         $response->assertStatus(302);
         $response->assertRedirect(route('login'));
+    }
+
+    public function test_not_found_page_is_displayed_when_accessing_non_existent_book(): void
+    {
+        $response = $this->get('/books/9999');
+
+        $response->assertNotFound();
+        $response->assertSee('ページが見つかりません');
     }
 }
