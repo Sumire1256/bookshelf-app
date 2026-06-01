@@ -12,6 +12,7 @@ class LogoutResponse implements LogoutResponseContract
      * ログアウト後のレスポンスを返す
      *
      * @param  Request  $request  ログアウトリクエスト
+     * @return RedirectResponse ログインページへのリダイレクトレスポンス
      */
     public function toResponse($request): RedirectResponse
     {

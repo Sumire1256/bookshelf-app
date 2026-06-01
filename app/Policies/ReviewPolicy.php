@@ -12,6 +12,7 @@ class ReviewPolicy
      *
      * @param  User  $user  認証済みユーザー
      * @param  Review  $review  対象のレビュー
+     * @return bool レビューを更新・削除できる場合はtrue、そうでない場合はfalse
      */
     public function update(User $user, Review $review): bool
     {

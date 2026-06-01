@@ -9,6 +9,8 @@ class ReportController extends Controller
 {
     /**
      * マイ読書レポートを表示する
+     *
+     * @return View マイ読書レポートのビュー
      */
     public function index(): View
     {
@@ -28,6 +30,7 @@ class ReportController extends Controller
      * 基本統計を生成する
      *
      * @param  Collection  $reviews  レビューコレクション
+     * @return array 基本統計の配列
      */
     private function buildSummary(Collection $reviews): array
     {
@@ -42,6 +45,7 @@ class ReportController extends Controller
      * 評価分布を生成する
      *
      * @param  Collection  $reviews  レビューコレクション
+     * @return Collection 評価分布のコレクション
      */
     private function buildRatingDistribution(Collection $reviews): Collection
     {
@@ -54,6 +58,7 @@ class ReportController extends Controller
      * 高評価書籍TOP5を生成する
      *
      * @param  Collection  $reviews  レビューコレクション
+     * @return Collection 高評価書籍TOP5のコレクション
      */
     private function buildTopRatedBooks(Collection $reviews): Collection
     {
@@ -74,6 +79,7 @@ class ReportController extends Controller
      * ジャンル別評価傾向TOP5を生成する
      *
      * @param  Collection  $reviews  レビューコレクション
+     * @return Collection ジャンル別評価傾向TOP5のコレクション
      */
     private function buildGenreRatings(Collection $reviews): Collection
     {

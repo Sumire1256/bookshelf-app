@@ -11,6 +11,7 @@ class ReviewResource extends JsonResource
      * レビューのリソース表現
      *
      * @param  Request  $request  リクエスト
+     * @return array レビューのリソース配列
      */
     public function toArray(Request $request): array
     {

@@ -20,6 +20,7 @@ class BookController extends Controller
      *
      * @param  Request  $request  キーワード・ジャンル・並び順を含むリクエスト
      * @param  BookSearchService  $bookSearchService  書籍検索サービス
+     * @return AnonymousResourceCollection 書籍のリソースコレクション
      */
     public function index(Request $request, BookSearchService $bookSearchService): AnonymousResourceCollection
     {
@@ -32,6 +33,7 @@ class BookController extends Controller
      * 書籍を登録する
      *
      * @param  StoreBookRequest  $request  バリデーション済みのリクエスト
+     * @return JsonResponse 書籍を登録した結果を含むJSONレスポンス
      */
     public function store(StoreBookRequest $request): JsonResponse
     {
@@ -43,6 +45,9 @@ class BookController extends Controller
 
     /**
      * 書籍の詳細を取得する
+     *
+     * @param  Book  $book  表示対象の書籍
+     * @return BookResource 書籍のリソース
      */
     public function show(Book $book): BookResource
     {
@@ -56,6 +61,7 @@ class BookController extends Controller
      *
      * @param  UpdateBookRequest  $request  バリデーション済みのリクエスト
      * @param  Book  $book  更新対象の書籍
+     * @return JsonResponse 書籍を更新した結果を含むJSONレスポンス
      */
     public function update(UpdateBookRequest $request, Book $book): JsonResponse
     {
@@ -71,6 +77,7 @@ class BookController extends Controller
      * 書籍を削除する
      *
      * @param  Book  $book  削除対象の書籍
+     * @return JsonResponse 削除結果を含むJSONレスポンス
      */
     public function destroy(Book $book): JsonResponse
     {

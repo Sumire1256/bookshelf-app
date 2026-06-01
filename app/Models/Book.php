@@ -28,6 +28,8 @@ class Book extends Model
 
     /**
      * 書籍に関連するレビューを取得する。
+     *
+     * @return HasMany 書籍に関連するレビューのリレーション
      */
     public function reviews(): HasMany
     {
@@ -36,6 +38,8 @@ class Book extends Model
 
     /**
      * 書籍に関連するジャンルを取得する。
+     *
+     * @return BelongsToMany 書籍に関連するジャンルのリレーション
      */
     public function genres(): BelongsToMany
     {
@@ -44,6 +48,8 @@ class Book extends Model
 
     /**
      * 書籍を登録したユーザーを取得する。
+     *
+     * @return BelongsTo 書籍を登録したユーザーのリレーション
      */
     public function user(): BelongsTo
     {

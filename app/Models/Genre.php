@@ -16,6 +16,8 @@ class Genre extends Model
 
     /**
      * ジャンルに関連する書籍を取得する。
+     *
+     * @return BelongsToMany ジャンルに関連する書籍のリレーション
      */
     public function books(): BelongsToMany
     {

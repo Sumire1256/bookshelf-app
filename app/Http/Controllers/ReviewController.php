@@ -58,6 +58,7 @@ class ReviewController extends Controller
      * レビューを削除する
      *
      * @param  Review  $review  削除対象のレビュー
+     * @return RedirectResponse 書籍の詳細ページにリダイレクトするレスポンス
      */
     public function destroy(Review $review): RedirectResponse
     {

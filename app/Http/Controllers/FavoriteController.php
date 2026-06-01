@@ -10,6 +10,9 @@ class FavoriteController extends Controller
 {
     /**
      * 書籍をお気に入りに追加/解除する
+     *
+     * @param  Book  $book  お気に入りの対象となる書籍
+     * @return RedirectResponse 前のページにリダイレクトするレスポンス
      */
     public function toggle(Book $book): RedirectResponse
     {
@@ -26,6 +29,8 @@ class FavoriteController extends Controller
 
     /**
      * お気に入りの書籍一覧を表示する
+     *
+     * @return View お気に入りの書籍一覧のビュー
      */
     public function index(): View
     {
