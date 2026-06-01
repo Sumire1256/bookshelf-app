@@ -49,7 +49,82 @@ Bookshelfは書籍のレビューと管理ができるWebアプリケーショ�
 - 公開API
 
 ## 🧩ER図
-![ER図](public/images/er_diagram.svg)
+```mermaid
+%%{init: {'theme': 'default'}}%%
+erDiagram
+	direction TB
+	users {
+		bigint id PK ""  
+		varchar name  ""  
+		varchar email UK ""  
+		timestamp email_verified_at  "nullable"  
+		varchar password  ""  
+		varchar remember_token  ""  
+		timestamp created_at  ""  
+		timestamp updated_at  ""  
+	}
+
+	books {
+		bigint id PK ""  
+		bigint user_id FK ""  
+		varchar title  ""  
+		varchar author  ""  
+		varchar isbn UK "nullable"  
+		date published_date  "nullable"  
+		text description  "nullable"  
+		varchar image_url  "nullable"  
+		timestamp created_at  ""  
+		timestamp updated_at  ""  
+	}
+
+	favorites {
+		bigint user_id PK,FK ""  
+		bigint book_id PK,FK ""  
+		timestamp created_at  ""  
+		timestamp updated_at  ""  
+	}
+
+	genres {
+		bigint id PK ""  
+		varchar name  ""  
+		timestamp created_at  ""  
+		timestamp updated_at  ""  
+	}
+
+	book_genre {
+		bigint book_id PK,FK ""  
+		bigint genre_id PK,FK ""  
+		timestamp created_at  ""  
+		timestamp updated_at  ""  
+	}
+
+	reviews {
+		bigint id PK ""  
+		bigint user_id FK ""  
+		bigint book_id FK ""  
+		tinyint rating  "1～5"  
+		text comment  ""  
+		timestamp created_at  ""  
+		timestamp updated_at  ""  
+	}
+
+	review_likes {
+		bigint user_id PK,FK ""  
+		bigint review_id PK,FK ""  
+		timestamp created_at  ""  
+		timestamp updated_at  ""  
+	}
+
+	users||--o{books:"has many"
+	users||--o{favorites:"has many (中間)"
+	users||--o{reviews:"has many"
+	users||--o{review_likes:"has many (中間)"
+	books||--o{favorites:"has many (中間)"
+	books||--o{book_genre:"has many"
+	books||--o{reviews:"has many"
+	genres||--o{book_genre:"has many"
+	reviews||--o{review_likes:"has many (中間)"
+```
 
 ## ⛏️環境構築手順
 
