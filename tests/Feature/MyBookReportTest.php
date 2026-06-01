@@ -9,7 +9,7 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class MyBookReportsTest extends TestCase
+class MyBookReportTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -35,20 +35,30 @@ class MyBookReportsTest extends TestCase
 
     public function test_books_read_count_is_correct(): void
     {
-        Review::factory()->count(3)->create(['user_id' => $this->user->id]);
+        $book1 = Book::factory()->create();
+        $book2 = Book::factory()->create();
+
+        Review::factory()->count(2)->create([
+            'user_id' => $this->user->id,
+            'book_id' => $book1->id,
+        ]);
+        Review::factory()->create([
+            'user_id' => $this->user->id,
+            'book_id' => $book2->id,
+        ]);
 
         $response = $this->actingAs($this->user)->get(route('reports.index'));
 
         $response->assertOk();
         $response->assertViewHas('stats', function ($stats) {
-            return $stats['summary']['books_read'] === 3;
+            return $stats['summary']['books_read'] === 2;
         });
     }
 
     public function test_average_rating_is_correct(): void
     {
         collect([1, 3, 5])->each(fn ($rating) => Review::factory()->create([
-            'user_id' => $this->user,
+            'user_id' => $this->user->id,
             'rating' => $rating,
         ]));
 
@@ -85,6 +95,7 @@ class MyBookReportsTest extends TestCase
     {
         collect([4, 5, 5])->each(fn ($rating) => Review::factory()->create([
             'user_id' => $this->user->id,
+            'book_id' => Book::factory()->create()->id,
             'rating' => $rating,
         ]));
 
@@ -99,6 +110,7 @@ class MyBookReportsTest extends TestCase
     {
         collect([4, 4, 4, 5, 5, 5])->each(fn ($rating) => Review::factory()->create([
             'user_id' => $this->user->id,
+            'book_id' => Book::factory()->create()->id,
             'rating' => $rating,
         ]));
 
@@ -212,6 +224,7 @@ class MyBookReportsTest extends TestCase
     {
         collect([1, 2, 3, 4, 5])->each(fn ($rating) => Review::factory()->create([
             'user_id' => $this->user->id,
+            'book_id' => Book::factory()->create()->id,
             'rating' => $rating,
         ]));
 
@@ -242,6 +255,30 @@ class MyBookReportsTest extends TestCase
 
             return $genreRating['count'] === 3
                 && $genreRating['average_rating'] == 3.0;
+        });
+    }
+
+    // 同じ書籍への複数レビューは1件として表示される
+    public function test_duplicated_book_reviews_are_deduplicated_in_top_rated(): void
+    {
+        $book = Book::factory()->create();
+
+        Review::factory()->create([
+            'user_id' => $this->user->id,
+            'book_id' => $book->id,
+            'rating' => 5,
+        ]);
+        Review::factory()->create([
+            'user_id' => $this->user->id,
+            'book_id' => $book->id,
+            'rating' => 4,
+        ]);
+
+        $response = $this->actingAs($this->user)->get(route('reports.index'));
+
+        $response->assertViewHas('stats', function ($stats) {
+            return count($stats['top_rated_books']) === 1
+                && $stats['top_rated_books'][0]['rating'] === 5;
         });
     }
 }
