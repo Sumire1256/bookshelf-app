@@ -1,66 +1,147 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# BookShelf 書籍レビューアプリ
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## 概要
+Bookshelfは書籍のレビューと管理ができるWebアプリケーションです。  
 
-## About Laravel
+ユーザーは書籍を登録し、レビューや評価を投稿できます。  
+また、気に入った書籍をお気に入りに登録したり、他のユーザーのレビューにいいねをすることができます。  
+その他にも、ランキングや、マイ読書レポートなどの機能を提供します。
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 🪄使用技術一覧
+### バックエンド
+![Laravel](https://img.shields.io/badge/Laravel-10.x-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)
+![PHP](https://img.shields.io/badge/PHP-8.5-777BB4?style=for-the-badge&logo=php&logoColor=white)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### フロントエンド
+![Vite](https://img.shields.io/badge/Vite-5.0-646CFF?style=for-the-badge&logo=vite&logoColor=white)
+![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-3.4-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### 開発ツール
+![Laravel Sail](https://img.shields.io/badge/Laravel_Sail-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)
 
-## Learning Laravel
+### データベース
+![MySQL](https://img.shields.io/badge/MySQL-8.4-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### インフラ・開発環境
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+![phpMyAdmin](https://img.shields.io/badge/phpMyAdmin-6C78AF?style=for-the-badge&logo=phpmyadmin&logoColor=white)
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## 🔍目次
+1. [主な機能](#主な機能)
+2. [ER図](#er図)
+3. [環境構築手順](#️環境構築手順)
+4. [APIエンドポイント一覧](#apiエンドポイント一覧)
+5. [開発環境URL](#開発環境url)
+6. [ログイン情報](#ログイン情報)
+7. [テストの実行方法](#テストの実行方法)
+8. [作成者](#作成者)
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## 📌主な機能
+- 書籍の登録・編集・削除
+- レビューの投稿・編集・削除
+- 書籍お気に入り機能
+- いいね機能
+- ジャンル管理
+- 書籍ランキング表示
+- マイ読書レポート
+- 書籍検索・フィルタ・ソート
+- ISBN検索（Google Books API連携）
+- 公開API
 
-## Laravel Sponsors
+## 🧩ER図
+![ER図](public/images/er_diagram.svg)
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## ⛏️環境構築手順
 
-### Premium Partners
+1. リポジトリのクローン
+以下のコマンドを実行してリポジトリをクローンし、プロジェクトのディレクトリに移動します。  
+```
+git clone https://github.com/Sumire1256/bookshelf-app.git
+cd bookshelf-app
+```
+2. `.env.example` から `.env` を作成
+```
+cp .env.example .env
+```
+3. composerでパッケージをインストール
+```
+docker run --rm \
+    -u "$(id -u):$(id -g)" \
+    -v "$(pwd):/var/www/html" \
+    -w /var/www/html \
+    -e COMPOSER_CACHE_DIR=/tmp/composer_cache \
+    laravelsail/php82-composer:latest \
+    composer install
+```
+4. Sailを起動
+```
+sail up -d
+```
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+### Laravel環境構築
+1. アプリケーションキーを生成
+```
+sail artisan key:generate
+```
+2. データベースのマイグレーションと初期データ投入
+```
+sail artisan migrate:fresh --seed
+```
+3. フロントエンドのパッケージをインストール・ビルド
+```
+sail npm install
 
-## Contributing
+# 開発時
+sail npm run dev
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+# 本番・デモ確認時
+sail npm run build
+```
 
-## Code of Conduct
+## 📱APIエンドポイント一覧
+### 認証
+| メソッド | URI | 説明 | 認証 |
+|---------|-----|------|------|
+![POST](https://img.shields.io/badge/POST-f97316?style=flat-square) | /api/v1/login | ログインしてトークンを取得する | 不要
+![POST](https://img.shields.io/badge/POST-f97316?style=flat-square) | /api/v1/logout | ログアウトしてトークンを削除する | Sanctum
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### 書籍
+HTTPメソッド | URI | 説明 | 認証
+--- | --- | ---| ---
+![GET](https://img.shields.io/badge/GET-22c55e?style=flat-square) | /api/v1/books | 書籍一覧を取得する（検索・ページネーション付き） | 不要
+![GET](https://img.shields.io/badge/GET-22c55e?style=flat-square) | /api/v1/books/{book} | 書籍詳細を取得する（ジャンル情報・レビュー含む） | 不要
+![POST](https://img.shields.io/badge/POST-f97316?style=flat-square) | /api/v1/books | 書籍を新規登録する | Sanctum
+![PUT](https://img.shields.io/badge/PUT-3b82f6?style=flat-square) | /api/v1/books/{book} | 書籍を更新する | Sanctum + BookPolicy(所有者のみ)
+![DELETE](https://img.shields.io/badge/DELETE-ef4444?style=flat-square) | /api/v1/books/{book}| 書籍を削除する | Sanctum + BookPolicy(所有者のみ)
 
-## Security Vulnerabilities
+## 🌐開発環境URL
+- アプリ: http://localhost
+- phpMyAdmin: http://localhost:8080
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## 🔓ログイン情報
+| 名前 | メールアドレス | パスワード |
+|------|-------------|-----------|
+| 山田太郎 | yamada@example.com | password |
+| 鈴木花子 | suzuki@example.com | password |
+| 田中一郎 | tanaka@example.com | password |
+| 佐藤美咲 | sato@example.com | password |
+| 高橋健太 | takahashi@example.com | password |
 
-## License
+## 💯テストの実行方法
+- 全テスト実行
+```
+sail artisan test
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+- カバレッジ確認
+```
+sail artisan test --coverage
+```
+
+- コードフォーマット確認
+```
+sail bin pint --test
+```
+
+## 作成者
+👩🏻‍💻 https://github.com/Sumire1256
