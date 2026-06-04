@@ -20,7 +20,7 @@ class BookResource extends JsonResource
             'user_id' => $this->user_id,
             'title' => $this->title,
             'author' => $this->author,
-            'genres' => $this->genres->pluck('name'),
+            'genres' => GenreResource::collection($this->genres),
             'isbn' => $this->isbn,
             'published_date' => $this->published_date?->format('Y-m-d'),
             'description' => $this->description,

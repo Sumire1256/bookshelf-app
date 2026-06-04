@@ -19,7 +19,7 @@ class BookCollectionResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'author' => $this->author,
-            'genres' => $this->genres->pluck('name'),
+            'genres' => GenreResource::collection($this->genres),
             'image_url' => $this->image_url,
             'reviews_avg_rating' => $this->reviews_avg_rating ? number_format((float) $this->reviews_avg_rating, 2) : null,
             'reviews_count' => $this->reviews_count,

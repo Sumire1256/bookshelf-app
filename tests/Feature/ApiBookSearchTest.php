@@ -124,7 +124,7 @@ class ApiBookSearchTest extends TestCase
         $response->assertJsonFragment([
             'title' => 'Laravel',
             'author' => '山田太郎',
-            'genres' => ['技術書'],
+            'genres' => [['id' => 1, 'name' => '技術書']],
         ]);
     }
 
