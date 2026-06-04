@@ -15,13 +15,14 @@ class LikeController extends Controller
      */
     public function like(Review $review): RedirectResponse
     {
-        $user = auth()->user();
+        // toggle()メソッドを使用して、いいねの状態を切り替える
+        auth()->user()->likedReviews()->toggle($review->id);
 
-        if ($user->likedReviews->contains($review->id)) {
-            $user->likedReviews()->detach($review->id);
-        } else {
-            $user->likedReviews()->attach($review->id);
-        }
+        // if (auth()->user()->likedReviews->contains($review->id)) {
+        // auth()->user()->likedReviews()->detach($review->id);
+        // } else {
+        // auth()->user()->likedReviews()->attach($review->id);
+        // }
 
         return back();
     }

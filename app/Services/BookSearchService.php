@@ -18,6 +18,7 @@ class BookSearchService
     {
         return Book::with('genres')
             ->withAvg('reviews', 'rating')
+            ->withCount('reviews')
             // キーワード検索（タイトル・著者）
             ->when($request->filled('keyword'), function ($query) use ($request) {
                 $query->where(function ($q) use ($request) {

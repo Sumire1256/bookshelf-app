@@ -13,15 +13,13 @@ class ReviewLikeSeeder extends Seeder
         $users = User::all();
         $reviews = Review::all();
 
-        $users->each(function ($user) use ($reviews) {
-            $likeableReviews = $reviews->reject(
-                fn ($review) => $review->user_id === $user->id
-            );
+        $reviews->each(function ($review) use ($users) {
+            $likeableUsers = $users->where('id', '!=', $review->user_id);
 
             $count = rand(0, 3);
-            if ($count > 0) {
-                $user->likedReviews()->syncWithoutDetaching(
-                    $likeableReviews->random($count)->pluck('id')
+            if ($count > 0 && $likeableUsers->count() >= $count) {
+                $review->likedByUsers()->syncWithoutDetaching(
+                    $likeableUsers->random($count)->pluck('id')
                 );
             }
         });

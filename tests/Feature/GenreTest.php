@@ -27,7 +27,7 @@ class GenreTest extends TestCase
             'name' => 'テスト',
         ]);
 
-        $response->assertRedirect(route('genres.show', Genre::first()));
+        $response->assertRedirect(route('genres.index'));
         $response->assertSessionHas('success', 'ジャンルを登録しました');
         $this->assertDatabaseHas('genres', [
             'name' => 'テスト',
@@ -72,7 +72,7 @@ class GenreTest extends TestCase
             'name' => str_repeat('あ', 50),
         ]);
 
-        $response->assertRedirect(route('genres.show', Genre::first()));
+        $response->assertRedirect(route('genres.index'));
         $response->assertSessionHas('success', 'ジャンルを登録しました');
         $this->assertDatabaseHas('genres', [
             'name' => str_repeat('あ', 50),
@@ -105,7 +105,7 @@ class GenreTest extends TestCase
             'name' => '更新後のジャンル',
         ]);
 
-        $response->assertRedirect(route('genres.show', $genre));
+        $response->assertRedirect(route('genres.index'));
         $response->assertSessionHas('success', 'ジャンルを更新しました');
         $this->assertDatabaseHas('genres', [
             'name' => '更新後のジャンル',
@@ -166,7 +166,7 @@ class GenreTest extends TestCase
             'name' => str_repeat('あ', 50),
         ]);
 
-        $response->assertRedirect(route('genres.show', Genre::first()));
+        $response->assertRedirect(route('genres.index'));
         $response->assertSessionHas('success', 'ジャンルを更新しました');
         $this->assertDatabaseHas('genres', [
             'name' => str_repeat('あ', 50),
@@ -201,7 +201,7 @@ class GenreTest extends TestCase
             'name' => 'テスト',
         ]);
 
-        $response->assertRedirect(route('genres.show', $genre));
+        $response->assertRedirect(route('genres.index'));
         $response->assertSessionHas('success', 'ジャンルを更新しました');
         $this->assertDatabaseHas('genres', [
             'name' => 'テスト',

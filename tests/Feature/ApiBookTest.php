@@ -123,7 +123,7 @@ class ApiBookTest extends TestCase
             'reviews_count' => 1,
         ]);
         $response->assertJsonFragment([
-            'genres' => [$this->genre->name],
+            'genres' => [['id' => $this->genre->id, 'name' => $this->genre->name]],
         ]);
     }
 
